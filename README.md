@@ -1,6 +1,6 @@
 # Git Aliases Repository
 
-Welcome to my Git Aliases Repository! This repository provides a collection of useful Git aliases that can be easily added to your Git command-line interface (CLI). 
+Welcome to my Git Aliases Repository! This repository provides a collection of useful Git aliases that can be easily added to your Git command-line interface (CLI), there's also an old version of the git-notes.md file that I used to keep in my personal repo, stuck and unused. It was useful to keep track of the most used commands and their syntax when I was learning Git.
 
 ## What are Git Aliases?
 
