@@ -1,127 +1,213 @@
-# Official documentation here: https://git-scm.com/docs/git
+# My Git notes
 
--- CLONE --
+You can find the official Git CLI doc here: https://git-scm.com/docs/git
+This was a set of notes I took while learning Git. I hope it helps you too.
+There might be some errors, so please let me know if you find any.
 
-git clone https://user:pass@[git-provider]/group/repo.git [directory] 		-> clone the repository to the chosen destination folder
+## Cloning a repository
+
+```bash
+# clone the repository to the chosen destination folder
+git clone https://user:pass@[git-provider]/group/repo.git example/
 git clone ssh://[git-provider]/user/repo.git
-git clone --recurse-submodules https://user:pass@[git-provider]/group/repo.git [directory] 	-> clone the repository to the chosen destination folder, including all submodules
+# including all submodules
+git clone --recurse-submodules https://user:pass@[git-provider]/group/repo.git example/
+```
 
--- PULL --
+## Pulling changes
 
-cd [project location]
-git pull 									-> fetch remote changes
+```bash
+# fetch remote changes and merge them into the current branch
+git pull
+# fetch remote changes and rebase the current branch on top of them
+git pull --rebase
+```
 
--- ADD --
+## Branching
 
-git add .									-> stage modified files, ignore files specified in .gitignore
-git add * 									-> stage modified files, ignore files starting with '.'
+```bash
+# create a new "example" local branch
+git branch example
+# create a new "example" local branch and switch to it
+git checkout -b example
+# push local branch to remote
+git push origin example
+# Add remote branch to local
+git remote add origin example
+# delete the remote branch
+git push origin --delete example
+# delete the local branch
+git branch -D example
+# show all remote branches
+git branch -r
+# show all local branches
+git branch
 
--- COMMIT -- 
+## Renaming
 
-git commit -m "[msg]"						-> commit local changes to the repository
-git commit -m "[header]" -m "[msg]"			-> commit with message split into title and body
+# switch branches
+git checkout old
+# rename the local branch			
+git branch -m renamed
+# push the renamed branch to the remote
+git push origin -u renamed
+# when you're sure, delete the old branch from the remote
+git push origin --delete old 
+```
 
--- RESET --
-git reset . 								-> unstage all files
-git reset HEAD -- [path/to/file/to/revert] 	-> unstage a specific file and revert it to the HEAD revision
-git reset --hard HEAD 						-> unstage all files and discard changes, reverting them to the HEAD revision (latest commit)
+## Adding changes
 
-e.g., git reset HEAD -- src/main/webapp/app/app.constants.ts
+```bash
+# stage all files
+git add .
+# stage files, excluding new files (and ofc .gitignore'd)
+git add *
+```
 
--- REVERT LAST COMMIT WITHOUT LOSING IT
+## Commit changes
 
-git reset HEAD~								-> undo last commit
-git reset HEAD~1 --soft                     -> perform a commit without pushing but forgot something, use this command to go back to the state after git add (files staged but not committed)
-	git reset HEAD~[commit number] --soft		-> perform N commits without pushing but forgot something and/or there is a merge commit
-git pull									-> pull to avoid merge conflicts
-git reset HEAD -- [file]					-> unstage the specified file
+```bash
+# commits all staged changes with the given message in the local branch
+git commit -m "Example message"
+# commit with header and body
+git commit -m "Header" -m "Body"
+```
 
--- REBASE MANUALLY --
-git checkout <target branch - usually develop> -> checkout the branch you want to base your feature on (usually develop)
-git pull --rebase							   -> pull and update develop to the latest version
-git checkout <branch which i want to rebase>   -> checkout the feature branch
-git rebase develop							   -> rebase the branch based on develop after updating it
-git rebase --continue | --skip				   -> continue the rebase
-git status									   -> is your branch different from origin? It's okay, it should be. Force push
-git push -f									   -> force push ONLY to your branch
+## Push changes
+    
+```bash
+# If an upstream is set, push changes to remote branch
+git push
+# If an upstream is not set, push changes to remote branch and set upstream
+git push --set-upstream origin example
+```
 
--- REVERT FILE --
-git checkout [path/to/file/to/revert] 									 	-> reset the file to the HEAD (if not yet committed)
-git checkout {remote-name usually "origin"}/{branch} -- {file/path.java} 	-> reset the file to the target branch (if already committed)
-git checkout -- .															-> reset all files to the HEAD (if not yet committed)
+## Syncing (a fork)
 
--- CLEAN --
+```bash
+# fetch remote changes
+git fetch
+# fetch remote changes from upstream
+git fetch upstream
+# merge remote changes from upstream (fork)
+git merge upstream/main 
+```
 
-git clean -n 								-> show what would be removed with clean
-git clean -f								-> remove all untracked files
-git clean -d                                -> remove all untracked directories
-git clean -(n)df							-> remove untracked files and directories
+## Reset or undo changes
 
--- PUSH --
-git push 									-> push changes to the branch only if there is an upstream set
+```bash
+# unstage all files
+git reset . 				
+# unstage a specific file and revert it to the HEAD revision (latest pushed commit)				
+git reset HEAD -- path/to/file/to/revert.json
+# unstage all files and discard changes, reverting them to the HEAD revision
+git reset --hard HEAD 
 
--- REBASE --
+# Reverting last commit without losing it
 
+# undo last remote pushed commit
+git reset HEAD~
+# undo last local commit and keep changes
+git reset HEAD~1 --soft
+# same as above but with a specific commit
+git reset HEAD~[commit number] --soft
+# unstage the specified file
+git reset HEAD -- app/reset.java
+
+# reset the file to the HEAD (if not yet committed)
+git checkout path/to/file/to/revert.ts
+# reset the file to the target branch
+git checkout origin/my_branch -- file/example.jsx
+# reset all files to the HEAD (if not yet committed)
+git checkout -- .
+
+```
+
+## Local branch rebase
 https://git-scm.com/docs/git-rebase 
 https://medium.freecodecamp.org/git-rebase-and-the-golden-rule-explained-70715eccc372 
 
-git add 
-git rebase --continue  						-> if you believe you have resolved conflicts optimally
-git rebase --abort  						-> abort the rebase if you believe you made mistakes in resolving conflicts 
+```bash
+# checkout the branch you want to be in sync with (usually main)
+git checkout main
+# fetch changes from the remote
+git pull --rebase
+# checkout the branch you want to rebase (usually development or feature ones)
+git checkout my_feature
+# rebase the branch on top of the target branch
+git rebase main
+# if there are conflicts, resolve them and continue the rebase or skip a commit, abort if you want to stop
+git rebase --continue | --skip | --abort
+# check the status. Is your branch different from origin? It's okay, it should be.
+git status
+# force push ONLY to your branch
+git push -f 
+```
 
+## Cleaning
 
--- STASH -- 
+```bash
+# show what would be removed with clean
+git clean -n
+# remove all untracked files
+git clean -f
+# remove all untracked directories
+git clean -d
+# remove untracked files and directories
+git clean -(n)df
+```
 
-git stash 									-> temporarily stash changes
-git pull 									-> fetch from the HEAD
-git stash pop 								-> apply the stashed changes
-git stash drop 								-> drop the stashed changes
+## Stashing
 
--- MERGE --
+```bash 
+# temporarily stash changes
+git stash 
+# fetch new	
+git pull
+# apply the stashed changes again
+git stash pop
+# drop the stashed changes
+git stash drop 
+```
 
-git merge [target branch] 					-> merge the current branch with the target branch
-git merge --abort 							-> abort the merge if you believe you made mistakes in resolving conflicts 
+## Merge
 
--- REMOTE --
+```bash
+# merge the main branch into the current branch
+git merge main
+# abort or keep the merge
+git merge --abort | --continue 
+```
 
-git remote -v 								-> show all remote names
+## Cherry-picking
 
--- BRANCH -- 
+```bash
+# cherry-pick a commit from another branch
+git cherry-pick [commit hash]
+```
 
-git checkout [branch name] 					-> switch branches
-git checkout -b [name_of_your_new_branch]   -> create a new branch
-git push [remote name] [branch name] -> create a branch (previously created locally) on the remote [usually origin]
-git remote add [remote name] [branch name]  -> add a remote to the branch [usually origin]
-git push origin --delete [branch name] 		-> delete the remote branch
-git branch -D [branch name] 				-> delete the local branch
-git branch -r 								-> show all remote branches
-git branch 									-> show all local branches
+## Remote
 
--- BRANCH RENAME --
+```bash
+# show all remote names
+git remote -v
+```
 
-git checkout <old_name>						-> switch branches
-git branch -m <new_name> 					-> rename the local branch
-git push origin -u <new_name>				-> push the new branch to the remote
-git push origin --delete <old_name> 		-> when you're sure, delete the old branch from the remote
+# Rewriting history
 
--- FEATURE (GitFlow) --
+```bash
+# revert a range of commits (on the current branch, beware of conflicts)
+git revert <old_commit_hash>..<latest_commit_hash> && git push -f
+```
 
-git checkout [start branch] 				         -> switch branches
-git checkout -b feature/[XXXX_feature_name]          -> create a feature branch
-git add .											 -> see git add
-git commit -m "message"                              -> see git commit
-git push --set-upstream origin [featurebranch name]  -> create a branch (previously created locally) on the remote [usually origin]
-
--- REWRITE HISTORY
-
-git revert <oldest_commit_hash>..<latest_commit_hash> -> revert a range of commits
-
--- Amend author in the whole repo --
+## Amend author in the whole repo
+    
+```bash
 
 git filter-branch --env-filter '
 WRONG_EMAIL="yyy@ddd.dev"
 NEW_NAME="John Doe"
-NEW_EMAIL="xxx@gmail.com"
+NEW_EMAIL="John.Doe@gmail.com"
 
 if [ "$GIT_COMMITTER_EMAIL" = "$WRONG_EMAIL" ]
 then
@@ -133,15 +219,23 @@ then
     export GIT_AUTHOR_NAME="$NEW_NAME"
     export GIT_AUTHOR_EMAIL="$NEW_EMAIL"
 fi
-' --tag-name-filter cat -- --branches --tags		-> this amends author in the whole repo
+' --tag-name-filter cat -- --branches --tags
+```
+
+## Aliases
+    
+```bash
+# create an alias for the defined command
+git config --global alias.<alias name> '<command>' 
 
 
--- ALIASES --
-
-git config --global alias.<alias name> '<command>'   -> create an alias for the defined command
-
--- show aliases
+# Show aliases alias so you can run "git alias"
 git config --global alias.alias "! git config --get-regexp ^alias\. | sed -e s/^alias\.// -e s/\ /\ =\ /"
+```
+
+Some aliases config, see [git-aliases.sh](git-aliases.sh) for more
+
+```bash
 git config --global alias.unstage 'reset HEAD --'
 git config --global alias.pr 'pull --rebase'
 git config --global alias.delet 'checkout *.project *.component'
@@ -162,32 +256,40 @@ git config --global alias.superclean 'gud && git delet'
 
 git config --global alias.lg1 'log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
 git config --global alias.lg2 'log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n'' %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all'
+```
 
--- CHERRY PICK --
+## Tagging
 
-git checkout [target branch]
--> git cherry-pick [commit id] 				-> cherry-pick the selected commit to the target branch
+```bash
+# show tags
+git tag
+# show log on a single line per commit									     
+git log --pretty=oneline
+# tag a commit
+git tag [tag name e.g., 2.17.3] [commit name]
+# push a tag
+git push origin [tag name]
+# push all tags     
+git push origin --tags				     
+```
 
--- TAG --
+## Check history
 
-git tag 									    -> show tags
-git log --pretty=oneline 					    -> show log on a single line per commit
-git tag [tag name e.g., 2.17.3] [commit name]   -> tag a commit
-git push origin [tag name] 					    -> push a tag
-git push origin --tags 						    -> push all tags
+```bash 
+# commit history
+git log
+# history with changes
+git log -p
+# show only the latest commit
+git log -1 
 
-
--- HISTORY -- 
-git log				-> commit history
-git log -p 			-> history with changes
-git log -1			-> show the latest commit
-
--- magicLOG -- 
+## Magic log 
 
 git log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
+
 git log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n'' %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all
+```
 
+## Finding bugs via git?
 
--- Find BUG via GIT --
-
-https://git-scm.com/docs/git-bisect
+See: https://git-scm.com/docs/git-bisect
