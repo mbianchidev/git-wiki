@@ -123,7 +123,7 @@ git checkout -- .
 
 ```
 
-## Local branch rebase
+## Rebase
 https://git-scm.com/docs/git-rebase 
 https://medium.freecodecamp.org/git-rebase-and-the-golden-rule-explained-70715eccc372 
 
