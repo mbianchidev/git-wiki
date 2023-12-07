@@ -243,9 +243,7 @@ git config --global alias.localdelete 'branch -D'
 git config --global alias.remotedelete 'push origin --delete'
 git config --global alias.cancelalias 'config --global --unset'
 git config --global alias.undolast 'reset HEAD~'
-git config --global alias.addncommit '
-
-commit -am'
+git config --global alias.addncommit 'commit -am'
 git config --global alias.newremote 'push --set-upstream'
 git config --global alias.addall 'add .'
 git config --global alias.newlocal 'checkout -b'
@@ -254,7 +252,7 @@ git config --global alias.casul 'clean -nfd'
 git config --global alias.gud 'clean -fd'
 git config --global alias.superclean 'gud && git delet'
 
-git config --global alias.lg1 'log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
+git config --global alias.lg1 'log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all'
 git config --global alias.lg2 'log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n'' %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all'
 ```
 
