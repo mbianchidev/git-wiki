@@ -73,6 +73,20 @@ git commit -m "Example message"
 git commit -m "Header" -m "Body"
 ```
 
+## Signing commits with GPG
+```
+gpg --gen-key # needs gpg installed
+gpg -K --keyid-format SHORT
+git config --global user.signingKey <theID>
+git config--global commit.gpgsign true
+```
+
+## Signing commits with SSH
+```
+git config --global user.signingKey $HOME/.ssh/id_3ru2r.pub
+git config --global commit.gpgsign true
+```
+
 ## Push changes
     
 ```bash
