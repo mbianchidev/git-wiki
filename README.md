@@ -1,61 +1,310 @@
-# Git Aliases Repository
+# My Git notes
 
-Welcome to my Git Aliases Repository! This repository provides a collection of useful Git aliases that can be easily added to your Git command-line interface (CLI), there's also an old version of the git-notes.md file that I used to keep in my personal repo, stuck and unused. It was useful to keep track of the most used commands and their syntax when I was learning Git.
+You can find the official Git CLI doc here: https://git-scm.com/docs/git
+This was a set of notes I took while learning Git some years ago. I hope it helps you too.
+There might be some errors and it might get outdated in time, so please let me know if you find any mistake and I'll fix it. PRs are welcome too.
 
-## What are Git Aliases?
+## Setting up aliases
 
-Git aliases are shortcuts or abbreviations for frequently used Git commands. They allow you to create custom commands or aliases for complex or lengthy Git commands, making your Git workflow more efficient and productive. Instead of typing out the full command each time, you can use a shorter alias to achieve the same result.
+Run the git-aliases.sh script (curl or wget required) example uses curl, wget runs with different parameters.
 
-For example, instead of typing `git commit -m "Your commit message"`, you can create an alias like `git ci` and use it as `git ci -m "Your commit message"`. This saves you time and reduces the chance of making typos or mistakes in long commands.
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/mbianchidev/git-aliases/main/git-aliases.sh)"
+```
 
-Git aliases are defined in the Git configuration file (`~/.gitconfig` or `.git/config`) under the `[alias]` section. They can be simple one-liners or even complex shell commands, depending on your needs.
+or
 
-Or you can use a command like `git config --global alias.ci 'commit -m'` to create an alias for the `git commit -m` command.
+Download the gitconfig file and edit it to your needs, then copy it to your git config folder. 
 
-## How to Use the Git Aliases
+Win usual location is `C:/Program Files/Git/etc/gitconfig`, while Linux/Mac usual location is `$HOME/.gitconfig`
 
-To use the aliases provided in this repository, you can follow these steps:
+```bash
+/bin/bash -c "$(wget -O- https://raw.githubusercontent.com/mbianchidev/git-aliases/main/.gitconfig)" && vim .gitconfig
+```
 
-1. Clone this repository to your local machine:
-   ```bash
-   git clone https://github.com/your-username/git-aliases-repo.git
-   ```
+## Cloning a repository
 
-2. Open the repository directory:
-   ```bash
-   cd git-aliases-repo
-   ```
+```bash
+# clone the repository to the chosen destination folder
+git clone https://user:pass@[git-provider]/group/repo.git example/
+git clone ssh://[git-provider]/user/repo.git
+# including all submodules
+git clone --recurse-submodules https://user:pass@[git-provider]/group/repo.git example/
+```
 
-3. Browse the available aliases in the repository. Each alias is defined in a separate line with a descriptive name.
+## Pulling changes
 
-4. Choose the aliases you want to add to your Git configuration.
+```bash
+# fetch remote changes and merge them into the current branch
+git pull
+# fetch remote changes and rebase the current branch on top of them
+git pull --rebase
+```
 
-5. Copy the contents of the chosen alias file.
+## Branching
 
-6. Open your Git configuration file in a text editor (`~/.gitconfig` for global configuration or `.git/config` for repository-specific configuration).
+```bash
+# create a new "example" local branch
+git branch example
+# create a new "example" local branch and switch to it
+git checkout -b example
+# push local branch to remote
+git push origin example
+# Add remote branch to local
+git remote add origin example
+# delete the remote branch
+git push origin --delete example
+# delete the local branch
+git branch -D example
+# show all remote branches
+git branch -r
+# show all local branches
+git branch
 
-7. Paste the alias configuration under the `[alias]` section.
+## Renaming
 
-8. Save and close the Git configuration file. Reload of the git CLI should not be required.
+# switch branches
+git checkout old
+# rename the local branch			
+git branch -m renamed
+# push the renamed branch to the remote
+git push origin -u renamed
+# when you're sure, delete the old branch from the remote
+git push origin --delete old 
+```
 
-Now, you can use the new alias in your Git commands by invoking it like any other Git command.
+## Adding changes
 
-## Contributing
+```bash
+# stage all files
+git add .
+# stage files, excluding new files (and ofc .gitignore'd)
+git add *
+# stage files, including new files
+git add -A 
+```
 
-We welcome contributions to the Git Aliases Repository! If you have useful Git aliases that you would like to share, you can follow these steps:
+## Commit changes
 
-1. Fork this repository to your GitHub account.
+```bash
+# commits all staged changes with the given message in the local branch
+git commit -m "Example message"
+# commit with header and body
+git commit -m "Header" -m "Body"
+```
 
-2. Clone your forked repository to your local machine.
+## Signing commits with GPG
+```bash
+gpg --gen-key # needs gpg installed
+gpg -K --keyid-format SHORT
+git config --global user.signingKey <theID>
+git config--global commit.gpgsign true
+```
 
-3. Create a new Git alias. Choose a descriptive name for your alias.
+## Signing commits with SSH
+```bash
+git config --global user.signingKey $HOME/.ssh/id_3ru2r.pub
+git config --global commit.gpgsign true
+```
 
-4. Open the new alias file and define your Git alias following the Git configuration syntax.
+## Signing commits with a key
+```bash
+git config --global push.autoSetupRemote true
 
-5. Commit and push your changes to your forked repository.
+```
 
-6. Create a pull request from your forked repository to the original Git Aliases Repository.
+## Push changes
+    
+```bash
+# If an upstream is set, push changes to remote branch
+git push
+# If an upstream is not set, push changes to remote branch and set upstream
+git push --set-upstream origin example
+```
 
-I will review your contribution and merge it into the main repository if it meets the guidelines and provides value to the community.
+## Syncing (a fork)
 
-Thanks, and happy coding!
+```bash
+# fetch remote changes
+git fetch
+# fetch remote changes from upstream
+git fetch upstream
+# merge remote changes from upstream (fork)
+git merge upstream/main 
+```
+
+## Reset or undo changes
+
+```bash
+# unstage all files
+git reset . 				
+# unstage a specific file and revert it to the HEAD revision (latest pushed commit)				
+git reset HEAD -- path/to/file/to/revert.json
+# unstage all files and discard changes, reverting them to the HEAD revision
+git reset --hard HEAD 
+
+# Reverting last commit without losing it
+
+# undo last remote pushed commit
+git reset HEAD~
+# undo last local commit and keep changes
+git reset HEAD~1 --soft
+# same as above but with a specific commit
+git reset HEAD~[commit number] --soft
+# unstage the specified file
+git reset HEAD -- app/reset.java
+
+# reset the file to the HEAD (if not yet committed)
+git checkout path/to/file/to/revert.ts
+# reset the file to the target branch
+git checkout origin/my_branch -- file/example.jsx
+# reset all files to the HEAD (if not yet committed)
+git checkout -- .
+
+```
+
+## Rebase
+https://git-scm.com/docs/git-rebase 
+https://medium.freecodecamp.org/git-rebase-and-the-golden-rule-explained-70715eccc372 
+
+```bash
+# checkout the branch you want to be in sync with (usually main)
+git checkout main
+# fetch changes from the remote
+git pull --rebase
+# checkout the branch you want to rebase (usually development or feature ones)
+git checkout my_feature
+# rebase the branch on top of the target branch
+git rebase main
+# if there are conflicts, resolve them and continue the rebase or skip a commit, abort if you want to stop
+git rebase --continue | --skip | --abort
+# check the status. Is your branch different from origin? It's okay, it should be.
+git status
+# force push ONLY to your branch
+git push -f 
+```
+
+## Cleaning
+
+```bash
+# show what would be removed with clean
+git clean -n
+# remove all untracked files
+git clean -f
+# remove all untracked directories
+git clean -d
+# remove untracked files and directories
+git clean -(n)df
+```
+
+## Stashing
+
+```bash 
+# temporarily stash changes
+git stash 
+# fetch new	
+git pull
+# apply the stashed changes again
+git stash pop
+# drop the stashed changes
+git stash drop 
+```
+
+## Merge
+
+```bash
+# merge the main branch into the current branch
+git merge main
+# abort or keep the merge
+git merge --abort | --continue 
+```
+
+## Cherry-picking
+
+```bash
+# cherry-pick a commit from another branch
+git cherry-pick [commit hash]
+```
+
+## Remote
+
+```bash
+# show all remote names
+git remote -v
+```
+
+# Rewriting history
+
+```bash
+# revert a range of commits (on the current branch, beware of conflicts)
+git revert <old_commit_hash>..<latest_commit_hash> && git push -f
+```
+
+## Amend author in the whole repo
+    
+```bash
+
+git filter-branch --env-filter '
+WRONG_EMAIL="yyy@ddd.dev"
+NEW_NAME="John Doe"
+NEW_EMAIL="John.Doe@gmail.com"
+
+if [ "$GIT_COMMITTER_EMAIL" = "$WRONG_EMAIL" ]
+then
+    export GIT_COMMITTER_NAME="$NEW_NAME"
+    export GIT_COMMITTER_EMAIL="$NEW_EMAIL"
+fi
+if [ "$GIT_AUTHOR_EMAIL" = "$WRONG_EMAIL" ]
+then
+    export GIT_AUTHOR_NAME="$NEW_NAME"
+    export GIT_AUTHOR_EMAIL="$NEW_EMAIL"
+fi
+' --tag-name-filter cat -- --branches --tags
+```
+
+## Aliases
+    
+```bash
+# create an alias for the defined command
+git config --global alias.<alias name> '<command>' 
+
+
+# Show aliases alias so you can run "git alias"
+git config --global alias.alias "! git config --get-regexp ^alias\. | sed -e s/^alias\.// -e s/\ /\ =\ /"
+```
+
+## Tagging
+
+```bash
+# show tags
+git tag
+# show log on a single line per commit									     
+git log --pretty=oneline
+# tag a commit
+git tag [tag name e.g., 2.17.3] [commit name]
+# push a tag
+git push origin [tag name]
+# push all tags     
+git push origin --tags				     
+```
+
+## Check history
+
+```bash 
+# commit history
+git log
+# history with changes
+git log -p
+# show only the latest commit
+git log -1 
+
+## Magic log 
+
+git log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
+
+git log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n'' %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all
+```
+
+## Finding bugs via git?
+
+See: https://git-scm.com/docs/git-bisect
