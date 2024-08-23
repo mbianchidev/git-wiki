@@ -1,4 +1,4 @@
-# My Git notes
+# mbianchidev's Git Wiki
 
 You can find the official Git CLI doc here: https://git-scm.com/docs/git
 This was a set of notes I took while learning Git some years ago. I hope it helps you too.
@@ -238,6 +238,12 @@ git remote -v
 ```bash
 # revert a range of commits (on the current branch, beware of conflicts)
 git revert <old_commit_hash>..<latest_commit_hash> && git push -f
+```
+
+# Git magic squash when forking and working on a branch =/= main
+
+```bash
+git reset --soft "$(git merge-base main HEAD)" )" && git commit 'new message' && git push --force-with-lease
 ```
 
 ## Amend author in the whole repo
