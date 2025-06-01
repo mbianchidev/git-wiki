@@ -1,0 +1,31 @@
+[alias]
+        alias = ! git config --get-regexp ^alias\\. | sed -e s/^alias\\.// -e s/\\ /\\ =\\ /
+        unstage = reset HEAD --
+        pr = pull --rebase
+        delet = checkout *.project *.component
+        localdelete = branch -D
+        remotedelete = push origin --delete
+        cancelalias = config --global --unset
+        undolast = reset HEAD~
+        addncommit = commit -asm
+        newremote = push --set-upstream
+        addall = add *.*
+        newlocal = checkout -b
+        switch = checkout
+        casul = clean -nfd
+        gud = clean -fd
+        superclean = gud && git delet
+        push = p
+        adc = !git add -A && git commit -asm
+[user]
+        email = matteo@mb-consulting.dev
+        name = mbianchidev
+        signingkey = xxxx (generate a new key for each device)
+[core]
+        autocrlf = false
+[commit]
+        gpgsign = true
+[push]
+        autoSetupRemote = true
+[pull]
+        rebase = true
