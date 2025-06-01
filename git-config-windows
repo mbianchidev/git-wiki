@@ -20,7 +20,7 @@
 [user]
         email = matteo@mb-consulting.dev
         name = mbianchidev
-        signingkey = 719E8895630CB7EF
+        signingkey = xxxx (generate a new key for each device)
 [core]
         autocrlf = false
 [commit]
