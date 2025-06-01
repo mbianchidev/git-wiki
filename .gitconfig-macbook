@@ -1,0 +1,18 @@
+[user]
+        email = xxxx
+        name = xxxx
+        signingkey = /Users/mbianchidev/.ssh/id_ed1234.pub
+[commit]
+        gpgsign = true
+[gpg]
+        program = /opt/homebrew/bin/gpg
+        format = ssh
+[tag]
+        gpgSign = true
+[alias]
+        commit = commit -S
+        scm = commit -S
+[gpg "ssh"]
+        allowedSignersFile = /Users/mbianchidev/.ssh/allowed_signers
+[pull]
+        rebase = true
