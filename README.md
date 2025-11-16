@@ -4,6 +4,8 @@ You can find the official Git CLI doc here: https://git-scm.com/docs/git
 This was a set of notes I took while learning Git some years ago. I hope it helps you too.
 There might be some errors and it might get outdated in time, so please let me know if you find any mistake and I'll fix it. PRs are welcome too.
 
+An interactive version of this wiki can be found [here](https://github.com/github-community-projects/periodic-table-of-git-merge-2025).
+
 ## Setting up aliases
 
 Run the git-aliases.sh script (curl or wget required) example uses curl, wget runs with different parameters.
